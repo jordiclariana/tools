@@ -20,6 +20,7 @@ You will need the following python modules:
 
 Other modules should be included by default on regular distros.
 
+```
 usage: apache_dumper.py [-h] [-p PID] [-u URL] [-r REQUEST]
                         [-f PSTATUS [PSTATUS ...]] [-s STATUS [STATUS ...]]
                         [-t SECONDS] [-m BYTES] [-d] [-k]
@@ -53,4 +54,4 @@ optional arguments:
                         Default: False
   -k, --kill            Kill apache processes that match. Cannot be used with dump (-d|--dump) option.
                         Default: False
-
+```
