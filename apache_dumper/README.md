@@ -21,7 +21,7 @@ You will need the following python modules:
 Other modules should be included by default on regular distros.
 
 ```
-usage: apache_dumper.py [-h] [-p PID] [-u URL] [-r REQUEST]
+usage: apache_dumper.py [-h] [-p PID] [-u URL] [-r REQUEST] [-n NOTREQUEST]
                         [-f PSTATUS [PSTATUS ...]] [-s STATUS [STATUS ...]]
                         [-t SECONDS] [-m BYTES] [-d] [-k]
 
@@ -36,6 +36,9 @@ optional arguments:
                         Default: http://localhost/server-status
   -r REQUEST, --request REQUEST
                         Request to look for when dumping or showing (it is a regex).
+                        Default: None (finds all processes)
+  -n NOTREQUEST, --notrequest NOTREQUEST
+                        Request to avoid when dumping or showing (it is a regex).
                         Default: None (finds all processes)
   -f PSTATUS [PSTATUS ...], --pstatus PSTATUS [PSTATUS ...]
                         Process status to look for when dumping or showing. Can be used multiple times.
