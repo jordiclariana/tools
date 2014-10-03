@@ -41,7 +41,7 @@ def get_fragment(f, start, end):
     buffer=f.read(print_len)
     return buffer
 
-def get_apache_process(url = "http://localhost/server-status", re_status = "W|G", pid = 0, request_pattern = "", mintime = 0, re_pstatus = "D|R|S|T|W|X|Z"):
+def get_apache_process(url = "http://localhost/server-status", re_status = "W|G", pid = 0, request_pattern = "", notrequest_pattern = "", mintime = 0, re_pstatus = "D|R|S|T|W|X|Z"):
     status_pattern  = re.compile(re_status)
     pstatus_pattern = re.compile(re_pstatus)
     #num_pattern = re.compile("[0-9]+")
@@ -86,7 +86,8 @@ def get_apache_process(url = "http://localhost/server-status", re_status = "W|G"
                 continue
             if request_pattern and not re.search(request_pattern, tds[12].text):    # Not the URL we are looking for
                 continue
-
+            if notrequest_pattern and re.search(notrequest_pattern, tds[12].text):    # Not the URL we are looking for
+                continue
             if tds[10].text == '127.0.0.1' and re.search('^GET /server-status', tds[12].text):
                 continue
 
@@ -170,6 +171,8 @@ parser.add_argument('-u', '--url', metavar = 'URL', default = 'http://localhost/
     help = 'Apache Status URL.\nOf course, if not local, memory dump will fail.\nDefault: %(default)s')
 parser.add_argument('-r', '--request', metavar = 'REQUEST', default = None,
     help = 'Request to look for when dumping or showing (it is a regex).\nDefault: None (finds all processes)')
+parser.add_argument('-n', '--notrequest', metavar = 'NOTREQUEST', default = None,
+    help = 'Request to avoid when dumping or showing (it is a regex).\nDefault: None (finds all processes)')
 parser.add_argument('-f', '--pstatus', metavar = 'PSTATUS', default = [ 'D', 'R', 'S', 'T', 'W', 'X', 'Z' ],
     help = 'Process status to look for when dumping or showing. Can be used multiple times.\nDefault: %(default)s',
     nargs = '+', choices = [ 'D', 'R', 'S', 'T', 'W', 'X', 'Z' ])
@@ -192,7 +195,7 @@ if args.dump and args.kill:
 args.status = '|'.join(args.status)
 args.pstatus = '|'.join(args.pstatus)
 
-processes_list = get_apache_process(url = args.url, re_status = args.status, pid = args.pid, request_pattern = args.request, mintime = args.mintime, re_pstatus = args.pstatus)
+processes_list = get_apache_process(url = args.url, re_status = args.status, pid = args.pid, request_pattern = args.request, notrequest_pattern = args.notrequest, mintime = args.mintime, re_pstatus = args.pstatus)
 
 if processes_list:
     if args.dump:
