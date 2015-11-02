@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from boto.ec2 import autoscale
 from boto import ec2
 from boto import exception
@@ -39,6 +41,7 @@ try:
   as_group = autoscale.get_all_groups(names=[args.autoscale_group_name])[0]
 except IndexError:
   print("Couldn't found autoscale group '{0}'".format(args.autoscale_group_name))
+  sys.exit(1)
 
 as_launch_config_tmp = copy(as_launch_config)
 as_launch_config_new = copy(as_launch_config)
@@ -48,7 +51,6 @@ print("Creating temporary AutoScaling Launch Config named: {0}".format(as_launch
 autoscale.create_launch_configuration(as_launch_config_tmp)
 
 print("Setting AutoScaling Group Launch Configuration to {0}".format(as_launch_config_tmp.name))
-as_group = autoscale.get_all_groups(names=[args.autoscale_group_name])[0]
 setattr(as_group, 'launch_config_name', as_launch_config_tmp.name)
 as_group.update()
 
